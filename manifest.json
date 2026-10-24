@@ -1,0 +1,24 @@
+{
+  "name": "AME-7742 Awesome Market",
+  "short_name": "AME-7742",
+  "description": "AME-7742 Market Engine - Psalm 121:4 Watchman Active",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
