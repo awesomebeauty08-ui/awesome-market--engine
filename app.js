@@ -1,53 +1,37 @@
-// @ts-nocheck
-// AME-7742 Skeleton Engine - FINAL NO PROBLEMS
-const AME_CODE = "AME-7742";
-console.log("AME Running:", AME_CODE);
-
-function ameLockCustomer(phone){
-  if(!phone){
-    alert("Enter phone");
-    return;
-  }
-  let customers = JSON.parse(localStorage.getItem("ame_customers") || "[]");
-  if(customers.includes(phone)){
-    alert("Already locked");
-    return;
-  }
-  customers.push(phone);
-  localStorage.setItem("ame_customers", JSON.stringify(customers));
-  alert("Locked: " + phone);
-  return customers;
+let products = JSON.parse(localStorage.getItem('ama_products_taste')||'[]');
+let cart=[]; let canSpin=true;
+function save(){localStorage.setItem('ama_products_taste',JSON.stringify(products));}
+function addProduct(){
+ const name=document.getElementById('pName').value.trim();
+ const price=parseInt(document.getElementById('pPrice').value);
+ const img=document.getElementById('pImg').value.trim()||'https://via.placeholder.com/200';
+ if(!name||!price){alert('Put name and price');return;}
+ products.push({id:Date.now(),name,price,img}); save();
+ document.getElementById('pName').value='';document.getElementById('pPrice').value='';document.getElementById('pImg').value='';
+ renderShop();
 }
-
-function ameAutoBuilder(businessInfo){
-  let cleanName = businessInfo.name.replace(/\s/g,'').toLowerCase();
-  let siteUrl = "www." + cleanName + ".ame7742.com";
-  let seoTitle = "Cheapest wholesale " + businessInfo.product + " in Lagos - " + businessInfo.name;
-  console.log("Building:", siteUrl, "| SEO:", seoTitle);
-  localStorage.setItem("ame_last_built", siteUrl);
-  localStorage.setItem("ame_last_seo", seoTitle);
-  return { siteUrl, seoTitle };
+function renderShop(){
+ const grid=document.getElementById('shopGrid');
+ if(products.length===0){grid.innerHTML='<p style="color:#666">No product yet — Add for top</p>';return;}
+ grid.innerHTML=products.map(p=>`
+  <div class="card">
+   <img src="${p.img}" onerror="this.src='https://via.placeholder.com/200'">
+   <div style="margin-top:8px;font-weight:600">${p.name}</div>
+   <div style="color:#888">₦${p.price.toLocaleString()}</div>
+   <button class="btn" onclick="addToCart(${p.id})">Add to Cart</button>
+  </div>`).join('');
 }
-
-// Make functions visible so Acode no complain
-window.ameLockCustomer = ameLockCustomer;
-window.ameAutoBuilder = ameAutoBuilder;
-window.AME_CODE = AME_CODE;
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e)=>{
-  e.preventDefault();
-  deferredPrompt = e;
-});
-
-let installBtn = document.getElementById('installBtn');
-if(installBtn){
-  installBtn.addEventListener('click', async()=>{
-    if(deferredPrompt){
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(outcome);
-      deferredPrompt = null;
-    }
-  });
+function addToCart(id){
+ const p=products.find(x=>x.id===id); cart.push(p);
+ document.getElementById('cartCount').textContent='Cart '+cart.length;
+ document.getElementById('status').textContent=p.name+' added';
 }
+function spinWheel(){
+ if(!canSpin){alert('Wait');return;} canSpin=false;
+ const wheel=document.getElementById('wheel'); const result=document.getElementById('wheelResult');
+ const prizes=['5% OFF','10% OFF','Free Delivery','Try Again','₦500 Off','20% OFF'];
+ const win=prizes[Math.floor(Math.random()*prizes.length)];
+ wheel.style.transform='rotate('+(720+Math.random()*720)+'deg)'; result.textContent='Spinning...';
+ setTimeout(()=>{result.textContent='You win: '+win; wheel.style.transform='rotate(0deg)'; canSpin=true;},2000);
+}
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('status').textContent='Auto Open — '+new Date().toLocaleTimeString(); renderShop();});

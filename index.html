@@ -1,34 +1,48 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="manifest" href="./manifest.json">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>awesome-market--engine</title>
 <style>
-body{margin:0;background:#0a0a0a;color:#fff;font-family:system-ui}
-header{display:flex;align-items:center;gap:12px;padding:16px;background:#111}
-
-main{padding:24px}
-.badge{display:inline-block;background:#222;padding:4px 10px;border-radius:99px;font-size:12px;margin-top:8px}
-footer{padding:20px;color:#666;font-size:12px}
+body{margin:0;background:#0a0a0a;color:#fff;font-family:system-ui,sans-serif}
+header{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;position:sticky;top:0;background:#0a0a0a}
+.badge{background:#1a1a1a;border:1px solid #333;padding:6px 12px;border-radius:999px;font-size:11px}
+main{padding:16px;max-width:1000px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:16px}
+.card{background:#111;border:1px solid #222;border-radius:14px;padding:12px}
+.card img{width:100%;height:120px;object-fit:cover;border-radius:10px;background:#222}
+.btn{background:#fff;color:#000;padding:10px 14px;border-radius:999px;border:0;font-weight:700;width:100%;margin-top:8px}
+.btn2{background:#1a1a1a;color:#fff;border:1px solid #333}
+#ama-wheel{margin-top:20px;background:#111;border:1px solid #222;border-radius:16px;padding:20px;text-align:center}
+.wheel{width:140px;height:140px;border-radius:50%;border:6px solid #333;margin:10px auto;display:flex;align-items:center;justify-content:center;font-size:30px;transition:transform 2s}
+input{width:100%;padding:10px;border-radius:10px;border:1px solid #333;background:#111;color:#fff;margin:4px 0}
 </style>
 </head>
 <body>
 <header>
-<img class="logo" src="logo.png" alt="Awesome Market Engine Logo" style="width:36px;height:36px;border-radius:8px;object-fit:contain;background:#ffffff;padding:2px;display:block">
-<div>
-<div style="font-weight:800;letter-spacing:1px">awesome-market--engine</div>
-<div class="badge">Tenant Mode: Isolated | AME-7742</div>
-</div>
+<strong>Awesome Market — Taste</strong>
+<span class="badge" id="status">Auto Open</span>
+<span id="cartCount" style="color:#888">Cart 0</span>
 </header>
-<main data-tenant="isolated">
-<h2>Platform Online</h2>
-<p>Engine lock active: AME-7742-PSALM-121-4</p>
-<button onclick="ameLockCustomer(prompt('Enter phone'))">Lock Customer</button>
-<p id="out"></p>
+<main>
+<h2>Vendor — Add Product (No Lock)</h2>
+<div class="card">
+<input id="pName" placeholder="Product name e.g Rice">
+<input id="pPrice" type="number" placeholder="Price e.g 5000">
+<input id="pImg" placeholder="Image link (optional)">
+<button class="btn" onclick="addProduct()">Add Product</button>
+</div>
+<h2 style="margin:20px 0 8px">Shop — Auto Open</h2>
+<div id="shopGrid" class="grid"></div>
+<div id="ama-wheel">
+<h3>AMA Wheel — Taste</h3>
+<div id="wheel" class="wheel">🎡</div>
+<p id="wheelResult" style="color:#888">Click spin — win discount</p>
+<button class="btn btn2" onclick="spinWheel()">Spin Wheel (Auto)</button>
+</div>
 </main>
-<footer>Built in Acode</footer>
-<script src="supabase.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
