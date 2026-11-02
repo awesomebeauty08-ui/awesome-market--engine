@@ -1,11 +1,11 @@
 {
-  "name": "AME-7742 Awesome Market",
-  "short_name": "AME-7742",
-  "description": "AME-7742 Market Engine - Psalm 121:4 Watchman Active",
+  "name": "Awesome Market — Taste",
+  "short_name": "Awesome",
+  "description": "Awesome Market Engine - Taste No Lock",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#000000",
+  "background_color": "#000000",
+  "theme_color": "#FF6A00",
   "orientation": "portrait",
   "icons": [
     {
