@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#000000">
+  <title>ML2026 ENGINE ACCESS</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #000; color: #e5e5e5; }
+    body {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      display: flex;
+      justify-content: center;
+      padding: 48px 16px;
+    }
+    main { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 20px; }
+    h1 { margin: 0; font-size: 16px; letter-spacing: 0.2em; color: #d4af37; }
+    .sub { margin: 4px 0 0; color: #737373; font-size: 12px; }
+    form { display: flex; flex-direction: column; gap: 12px; }
+    label { display: flex; flex-direction: column; gap: 6px; color: #a3a3a3; font-size: 12px; letter-spacing: 0.1em; }
+    input, textarea {
+      font: inherit;
+      color: #e5e5e5;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      border-radius: 4px;
+      padding: 10px 12px;
+      outline: none;
+    }
+    textarea { min-height: 140px; resize: vertical; }
+    input:focus, textarea:focus { border-color: #d4af37; }
+    button {
+      font: inherit;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #000;
+      background: #d4af37;
+      border: 0;
+      border-radius: 4px;
+      padding: 12px;
+      cursor: pointer;
+    }
+    button:hover { background: #e6c252; }
+    button:disabled { opacity: 0.5; cursor: wait; }
+    button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    pre {
+      margin: 0;
+      min-height: 160px;
+      padding: 14px;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #d4d4d4;
+    }
+    pre.error { color: #f87171; border-color: #7f1d1d; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>ML2026 ENGINE ACCESS</h1>
+      <p class="sub">// restricted terminal</p>
+    </header>
+
+    <form id="luna-form" autocomplete="off">
+      <label>
+        KEY
+        <input id="key" type="password" required autocomplete="off" spellcheck="false">
+      </label>
+      <label>
+        PROMPT
+        <textarea id="prompt" required spellcheck="false"></textarea>
+      </label>
+      <button id="call" type="submit">CALL LUNA</button>
+    </form>
+
+    <pre id="output" aria-live="polite">&gt; awaiting command_</pre>
+  </main>
+
+  <script>
+    const form = document.getElementById('luna-form');
+    const keyInput = document.getElementById('key');
+    const promptInput = document.getElementById('prompt');
+    const button = document.getElementById('call');
+    const output = document.getElementById('output');
+
+    function show(text, isError) {
+      output.textContent = text;
+      output.classList.toggle('error', Boolean(isError));
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      show('> waking luna...');
+
+      try {
+        const response = await fetch('/api/luna', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: keyInput.value, prompt: promptInput.value }),
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          show('> ' + (data.error || 'Request failed (' + response.status + ')'), true);
+        } else {
+          show(data.luna || '> (empty response)');
+        }
+      } catch {
+        show('> engine unreachable', true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    promptInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+        if (event.isComposing || event.keyCode === 229) return;
+        form.requestSubmit();
+      }
+    });
+  </script>
+</body>
+</html>
